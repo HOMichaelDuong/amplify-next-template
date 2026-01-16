@@ -11,6 +11,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 import {
   Map,
 } from 'react-map-gl/maplibre';
+import MapWithMovingMarker from "@/app/components/MapView";
 
 Amplify.configure(outputs);
 
@@ -21,42 +22,43 @@ export default function App() {
 
   const [selected, setSelected] = useState(null);
   
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  const [locations, setLocations] = useState<Array<Schema["Locations"]["type"]>>([]);
 
   const { signOut } = useAuthenticator();
 
-  function listTodos() {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
+  function listLocations() {
+    client.models.Locations.observeQuery().subscribe({
+      next: (data) => setLocations([...data.items]),
     });
   }
 
-  function deleteTodo(id: string) {
-    client.models.Todo.delete({ id })
+  function deleteLocation(id: string) {
+    client.models.Locations.delete({ id })
   }
   useEffect(() => {
-    listTodos();
+    listLocations();
   }, []);
 
-  function createTodo() {
-    client.models.Todo.create({
-      content: window.prompt("Todo content"),
+  function createLocation() {
+    client.models.Locations.create({
+      latitude: parseFloat(window.prompt("Latitude") || "0"),
+      longitude: parseFloat(window.prompt("Longitude") || "0"),
     });
   }
 
   return (
     <main>
-      <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
+      <h1>My locations</h1>
+      <button onClick={createLocation}>+ new</button>
       <ul>
-        {todos.map((todo) => (
+        {locations.map((location) => (
           <li 
-            onClick={() => deleteTodo(todo.id)}  
-            key={todo.id}>{todo.content}</li>
+            onClick={() => deleteLocation(location.id)}  
+            key={location.id}>{`Latitude: ${location.latitude}, Longitude: ${location.longitude}`}</li>
         ))}
       </ul>
       <div>
-        🥳 App successfully hosted. Try creating a new todo.
+        🥳 App successfully hosted. Try creating a new location.
         <br />
         <a href="https://docs.amplify.aws/nextjs/start/quickstart/nextjs-app-router-client-components/">
           Review next steps of this tutorial.
@@ -64,7 +66,8 @@ export default function App() {
       </div>
       <div> 
         <h1>A map of the world</h1>
-        <Map
+        <MapWithMovingMarker/>
+        {/* <Map
           initialViewState={{
             latitude: 40,
             longitude: -100,
@@ -75,7 +78,7 @@ export default function App() {
           mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
         >
 
-        </Map>
+        </Map> */}
       </div>
       <button onClick={signOut}>Sign out</button>
     </main>

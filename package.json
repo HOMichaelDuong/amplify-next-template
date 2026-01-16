@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-amplify/cli": "^14.2.3",
+    "@aws-amplify/geo": "^3.0.91",
     "@aws-amplify/ui-react": "^6.5.5",
+    "@aws-amplify/ui-react-geo": "^2.2.13",
     "aws-amplify": "^6.6.6",
     "deck.gl": "^9.2.6",
     "maplibre-gl": "^5.16.0",
