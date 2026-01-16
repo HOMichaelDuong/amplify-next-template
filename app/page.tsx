@@ -55,7 +55,7 @@ export default function App() {
           Review next steps of this tutorial.
         </a>
       </div>
-      <button onClick={signout}>Sign out</button>
+      <button onClick={signOut}>Sign out</button>
     </main>
   );
 }
