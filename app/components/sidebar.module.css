@@ -1,0 +1,72 @@
+.sidebar {
+  width: 220px;
+  min-width: 180px;
+  background: #0f172a;
+  color: #fff;
+  height: 100vh;
+  padding: 1rem;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.navList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navList li {
+  margin: 0.5rem 0;
+}
+
+.link {
+  color: #cbd5e1;
+  text-decoration: none;
+  display: block;
+  padding: 0.5rem 0.25rem;
+  border-radius: 4px;
+}
+
+.link:hover {
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+}
+
+.signOutWrapper {
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.signOutButton {
+  width: 100%;
+  background: transparent;
+  color: #cbd5e1;
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 0.5rem 0.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.signOutButton:hover {
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+}

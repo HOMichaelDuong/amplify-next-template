@@ -7,7 +7,6 @@ import type { Schema } from "@/amplify/data/resource";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
 import "@aws-amplify/ui-react/styles.css";
-import { useAuthenticator } from "@aws-amplify/ui-react";
 import {
   Map,
 } from 'react-map-gl/maplibre';
@@ -23,8 +22,6 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   
   const [locations, setLocations] = useState<Array<Schema["Locations"]["type"]>>([]);
-
-  const { signOut } = useAuthenticator();
 
   function listLocations() {
     client.models.Locations.observeQuery().subscribe({
@@ -46,6 +43,11 @@ export default function App() {
     });
   }
 
+  const markerPoints = locations.map(loc => ({
+    latitude: Number(loc.latitude ?? 0),
+    longitude: Number(loc.longitude ?? 0),
+  }));
+
   return (
     <main>
       <h1>My locations</h1>
@@ -60,13 +62,10 @@ export default function App() {
       <div>
         🥳 App successfully hosted. Try creating a new location.
         <br />
-        <a href="https://docs.amplify.aws/nextjs/start/quickstart/nextjs-app-router-client-components/">
-          Review next steps of this tutorial.
-        </a>
       </div>
       <div> 
         <h1>A map of the world</h1>
-        <MapWithMovingMarker/>
+        <MapWithMovingMarker markers={markerPoints}/>
         {/* <Map
           initialViewState={{
             latitude: 40,
@@ -80,7 +79,7 @@ export default function App() {
 
         </Map> */}
       </div>
-      <button onClick={signOut}>Sign out</button>
+      {/* Sign out moved to the sidebar */}
     </main>
   );
 }

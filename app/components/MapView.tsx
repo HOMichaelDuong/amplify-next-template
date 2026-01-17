@@ -25,7 +25,15 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 //   );
 // }
 
-export default function MapWithMovingMarker() {
+type MarkerType = {
+  latitude: number;
+  longitude: number;
+};
+type Props = {
+  markers?: MarkerType[];
+};
+
+export default function MapWithMovingMarker({ markers = [] }: Props) {
   const [{ latitude, longitude }, setMarkerLocation] = useState({
     latitude: 40,
     longitude: -100,
@@ -50,6 +58,17 @@ export default function MapWithMovingMarker() {
         }}
         mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
     >
+        {/* Render markers passed via props */}
+        {markers.map((m, i) => (
+          <Marker
+            key={`marker-${m.latitude}-${m.longitude}-${i}`}
+            longitude={m.longitude}
+            latitude={m.latitude}
+            anchor="bottom"
+          />
+        ))}
+
+        {/* Add a stateful Marker component to the Map at the specified latitude and longitude */}
         <Marker longitude={longitude} latitude={latitude} anchor="bottom" />
     </Map>
       {/* <MapView>
