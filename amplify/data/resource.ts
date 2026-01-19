@@ -10,6 +10,9 @@ specifies that any user authenticated via an API key can "create", "read",
 const schema = a.schema({
   Locations: a
     .model({
+      name: a.string(),
+      description: a.string(),
+      type: a.string(),
       latitude: a.float(),
       longitude: a.float(),
       isUserDefined: a.boolean(),
@@ -20,6 +23,7 @@ const schema = a.schema({
     .model({
       name: a.string(),
       description: a.string(),
+      type: a.string(),
       latitude: a.float(),
       longitude: a.float(),
       isUserDefined: a.boolean(),

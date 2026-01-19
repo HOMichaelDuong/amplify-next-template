@@ -54,7 +54,7 @@ export default function MapPage() {
                 <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid #ddd' }}>ID</th>
                 <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid #ddd' }}>Latitude</th>
                 <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid #ddd' }}>Longitude</th>
-                <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid #ddd' }}>User Defined</th>
+                <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid #ddd' }}>Type</th>
                 <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid #ddd' }}>Actions</th>
               </tr>
             </thead>
@@ -69,9 +69,9 @@ export default function MapPage() {
                     <td style={{ padding: '0.5rem', borderBottom: '1px solid #f0f0f0' }}>{loc.id}</td>
                     <td style={{ padding: '0.5rem', borderBottom: '1px solid #f0f0f0' }}>{loc.latitude ?? '-'}</td>
                     <td style={{ padding: '0.5rem', borderBottom: '1px solid #f0f0f0' }}>{loc.longitude ?? '-'}</td>
-                    <td style={{ padding: '0.5rem', borderBottom: '1px solid #f0f0f0' }}>{loc.isUserDefined ? 'Yes' : 'Yes'}</td>
+                    <td style={{ padding: '0.5rem', borderBottom: '1px solid #f0f0f0' }}>{loc.type ?? "user-defined"}</td>
                     <td style={{ padding: '0.5rem', borderBottom: '1px solid #f0f0f0' }}>
-                      {!loc.isUserDefined ? (
+                      {(loc.type ?? "user-defined") === "user-defined" ? (
                         <button onClick={() => deleteLocation(loc.id)} style={{ color: '#c00' }}>Remove</button>
                       ) : (
                         null
