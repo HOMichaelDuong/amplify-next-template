@@ -54,6 +54,9 @@ export default function MapPage() {
                 <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid #ddd' }}>ID</th>
                 <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid #ddd' }}>Latitude</th>
                 <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid #ddd' }}>Longitude</th>
+                <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid #ddd' }}>Location</th>
+                <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid #ddd' }}>Name</th>
+                <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid #ddd' }}>Description</th>
                 <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid #ddd' }}>Type</th>
                 <th style={{ textAlign: 'left', padding: '0.5rem', borderBottom: '1px solid #ddd' }}>Actions</th>
               </tr>
@@ -61,7 +64,7 @@ export default function MapPage() {
             <tbody>
               {locations.length === 0 ? (
                 <tr>
-                  <td colSpan={5} style={{ padding: '0.75rem' }}>No locations available</td>
+                  <td colSpan={8} style={{ padding: '0.75rem' }}>No locations available</td>
                 </tr>
               ) : (
                 locations.map((loc) => (
@@ -69,6 +72,9 @@ export default function MapPage() {
                     <td style={{ padding: '0.5rem', borderBottom: '1px solid #f0f0f0' }}>{loc.id}</td>
                     <td style={{ padding: '0.5rem', borderBottom: '1px solid #f0f0f0' }}>{loc.latitude ?? '-'}</td>
                     <td style={{ padding: '0.5rem', borderBottom: '1px solid #f0f0f0' }}>{loc.longitude ?? '-'}</td>
+                    <td style={{ padding: '0.5rem', borderBottom: '1px solid #f0f0f0' }}>{loc.location ?? '-'}</td>
+                    <td style={{ padding: '0.5rem', borderBottom: '1px solid #f0f0f0' }}>{loc.name ?? '-'}</td>
+                    <td style={{ padding: '0.5rem', borderBottom: '1px solid #f0f0f0' }}>{loc.description ?? '-'}</td>
                     <td style={{ padding: '0.5rem', borderBottom: '1px solid #f0f0f0' }}>{loc.type ?? "user-defined"}</td>
                     <td style={{ padding: '0.5rem', borderBottom: '1px solid #f0f0f0' }}>
                       {(loc.type ?? "user-defined") === "user-defined" ? (
