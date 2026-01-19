@@ -29,15 +29,27 @@ type MarkerType = {
   latitude: number;
   longitude: number;
 };
+// type Props = {
+//   markers?: MarkerType[];
+// };
+
 type Props = {
   markers?: MarkerType[];
+  onMapClick?: (coords: MarkerType) => void;
+  selectedPopupInfo?: string | null;
+  showPopup?: boolean;
+  addMarkerMode?: boolean;
+  onAddMarker?: (marker: MarkerType) => void;
+  onMarkerClick?: (index: number, coords: MarkerType) => void;
+  selectedCoords?: MarkerType | null;
 };
-
-export default function MapWithMovingMarker({ markers = [] }: Props) {
+export default function MapWithMovingMarker({ markers = [], onMapClick, selectedPopupInfo, showPopup, addMarkerMode = false, onMarkerClick, selectedCoords }: Props) {
   const [markerLocation, setMarkerLocation] = useState<MarkerType | null>(null);
   const [showUserMarkers, setShowUserMarkers] = useState(true);
   const [tempMarkerLocation, setTempMarkerLocation] = useState<MarkerType| null>(null);
   const [popupInfo, setPopupInfo] = useState<string | null>(null);
+  const [tempMarkerName, setTempMarkerName] = useState<string>('');
+  const [tempMarkerDescription, setTempMarkerDescription] = useState<string>('');
 
   // const updateMarker = () =>
   //   setMarkerLocation(prev => ({
@@ -45,23 +57,23 @@ export default function MapWithMovingMarker({ markers = [] }: Props) {
   //     longitude: prev.longitude + 5,
   //   }));
   const onClick = useCallback((event: any) => {
-
-    console.log('Map clicked at: ', event.lngLat);
-    setTempMarkerLocation({ latitude: event.lngLat.lat, longitude: event.lngLat.lng });
-
-    const info = `Longitude: ${event.lngLat.lng}, Latitude: ${event.lngLat.lat}`;
-    setPopupInfo(info);
-
-    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${event.lngLat.lat}&lon=${event.lngLat.lng}&format=json`)
-    .then(response => response.json()).then(data => {
-      if (data && data.display_name) {
-        setPopupInfo(`You clicked at:\n${data.display_name} \n ${info}`);
+    const { lngLat } = event;
+    // If addMarkerMode is enabled, create a temporary marker and call onMapClick
+    if (addMarkerMode) {
+      const coords = { latitude: lngLat.lat, longitude: lngLat.lng };
+      setTempMarkerLocation(coords);
+      const info = `Longitude: ${lngLat.lng}, Latitude: ${lngLat.lat}`;
+      setPopupInfo(info);
+      if (onMapClick) {
+        try {
+          onMapClick(coords);
+        } catch (err) {
+          console.error('onMapClick handler threw:', err);
+        }
       }
-    }).catch(err => {
-      console.error('Error fetching location name:', err);
-    });
-
-  }, []);
+    }
+    // If not in add mode, clicking on map does nothing (only markers are interactive)
+  }, [addMarkerMode, onMapClick]);
 
 
   return (
@@ -88,13 +100,47 @@ export default function MapWithMovingMarker({ markers = [] }: Props) {
             longitude={m.longitude}
             latitude={m.latitude}
             anchor="bottom"
-          />
+          >
+            <div
+              onClick={(e) => {
+                // prevent map click from firing
+                e.stopPropagation();
+                if (onMarkerClick) onMarkerClick(i, m);
+              }}
+              style={{ cursor: 'pointer', color: 'white' }}
+              title="Marker"
+            >
+              📍
+            </div>
+          </Marker>
         ))}
 
         {/* Add a stateful Marker component to the Map at the specified latitude and longitude */}
         {/* {markerLocation && <Marker longitude={markerLocation.longitude} latitude={markerLocation.latitude} anchor="bottom" />} */}
         {/* {tempMarkerLocation && (<><Marker longitude={tempMarkerLocation.longitude} latitude={tempMarkerLocation.latitude} anchor="bottom" /><Popup latitude={tempMarkerLocation.latitude} longitude={tempMarkerLocation.longitude} closeButton={true} closeOnClick={false} anchor="top">Temporary Marker</Popup></>)} */}
-        {tempMarkerLocation && (<><Popup latitude={tempMarkerLocation.latitude} longitude={tempMarkerLocation.longitude} closeButton={true} closeOnClick={false} anchor="top">{popupInfo} <br/> <strong>Add this marker below </strong></Popup></>)}
+        {/* Show popup for selectedCoords (existing marker) or temporary marker (adding) */}
+        {selectedCoords && showPopup && (
+          <Popup
+            latitude={selectedCoords.latitude}
+            longitude={selectedCoords.longitude}
+            closeButton={true}
+            closeOnClick={false}
+            anchor="top"
+          >
+            {selectedPopupInfo ?? popupInfo}
+          </Popup>
+        )}
+        {(!selectedCoords && tempMarkerLocation && showPopup) && (
+          <Popup
+            latitude={tempMarkerLocation.latitude}
+            longitude={tempMarkerLocation.longitude}
+            closeButton={true}
+            closeOnClick={false}
+            anchor="top"
+          >
+            {selectedPopupInfo ?? popupInfo} <br/> <strong>Add this marker below </strong>
+          </Popup>
+        )}
     </Map>
       {/* <MapView>
         <Marker latitude={latitude} longitude={longitude} />

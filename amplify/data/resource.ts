@@ -13,9 +13,9 @@ const schema = a.schema({
       name: a.string(),
       description: a.string(),
       type: a.string(),
+      location: a.string(),
       latitude: a.float(),
       longitude: a.float(),
-      isUserDefined: a.boolean(),
     })
     .authorization((allow) => [allow.publicApiKey()]),
 
@@ -24,9 +24,9 @@ const schema = a.schema({
       name: a.string(),
       description: a.string(),
       type: a.string(),
+      location: a.string(),
       latitude: a.float(),
       longitude: a.float(),
-      isUserDefined: a.boolean(),
     }).authorization((allow) => [allow.publicApiKey()])
 });
 
