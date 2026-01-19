@@ -38,6 +38,7 @@ export default function MapWithMovingMarker({ markers = [] }: Props) {
     latitude: 40,
     longitude: -100,
   });
+  const [showUserMarkers, setShowUserMarkers] = useState(true);
 
   const updateMarker = () =>
     setMarkerLocation(prev => ({
@@ -47,19 +48,21 @@ export default function MapWithMovingMarker({ markers = [] }: Props) {
 
   return (
     <>
-    <Button onClick={updateMarker}>Move Marker</Button>
+    <Button onClick={() => setShowUserMarkers(!showUserMarkers)}>{showUserMarkers ? "Hide" : "Show"} user markers</Button>
+    <br />
+    <br />
     <div style={{ width: '100%', height: '500px' }}>
 
       <Map
         initialViewState={{
-        longitude: -100,
-        latitude: 40,
+        longitude: 4,
+        latitude: 50,
         zoom: 3.5
         }}
         mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
     >
         {/* Render markers passed via props */}
-        {markers.map((m, i) => (
+        {showUserMarkers && markers.map((m, i) => (
           <Marker
             key={`marker-${m.latitude}-${m.longitude}-${i}`}
             longitude={m.longitude}

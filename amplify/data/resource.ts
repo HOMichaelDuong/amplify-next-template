@@ -12,8 +12,18 @@ const schema = a.schema({
     .model({
       latitude: a.float(),
       longitude: a.float(),
+      isUserDefined: a.boolean(),
     })
     .authorization((allow) => [allow.publicApiKey()]),
+
+  InternalData: a
+    .model({
+      name: a.string(),
+      description: a.string(),
+      latitude: a.float(),
+      longitude: a.float(),
+      isUserDefined: a.boolean(),
+    }).authorization((allow) => [allow.publicApiKey()])
 });
 
 export type Schema = ClientSchema<typeof schema>;

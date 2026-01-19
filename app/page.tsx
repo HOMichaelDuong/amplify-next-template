@@ -1,85 +1,23 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
-// import "./../app/app.css";
 import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
-import "@aws-amplify/ui-react/styles.css";
-import {
-  Map,
-} from 'react-map-gl/maplibre';
-import MapWithMovingMarker from "@/app/components/MapView";
+import styles from "@/page.module.css";
 
 Amplify.configure(outputs);
 
-const client = generateClient<Schema>();
-
-
 export default function App() {
 
-  const [selected, setSelected] = useState(null);
-  
-  const [locations, setLocations] = useState<Array<Schema["Locations"]["type"]>>([]);
-
-  function listLocations() {
-    client.models.Locations.observeQuery().subscribe({
-      next: (data) => setLocations([...data.items]),
-    });
-  }
-
-  function deleteLocation(id: string) {
-    client.models.Locations.delete({ id })
-  }
-  useEffect(() => {
-    listLocations();
-  }, []);
-
-  function createLocation() {
-    client.models.Locations.create({
-      latitude: parseFloat(window.prompt("Latitude") || "0"),
-      longitude: parseFloat(window.prompt("Longitude") || "0"),
-    });
-  }
-
-  const markerPoints = locations.map(loc => ({
-    latitude: Number(loc.latitude ?? 0),
-    longitude: Number(loc.longitude ?? 0),
-  }));
-
   return (
-    <main>
-      <h1>My locations</h1>
-      <button onClick={createLocation}>+ new</button>
-      <ul>
-        {locations.map((location) => (
-          <li 
-            onClick={() => deleteLocation(location.id)}  
-            key={location.id}>{`Latitude: ${location.latitude}, Longitude: ${location.longitude}`}</li>
-        ))}
-      </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new location.
-        <br />
-      </div>
-      <div> 
-        <h1>A map of the world</h1>
-        <MapWithMovingMarker markers={markerPoints}/>
-        {/* <Map
-          initialViewState={{
-            latitude: 40,
-            longitude: -100,
-            zoom: 3.5,
-            bearing: 0,
-            pitch: 0
-          }}
-          mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-        >
-
-        </Map> */}
-      </div>
-      {/* Sign out moved to the sidebar */}
+    <main className={styles.main}>
+      <h1>Welcome to the Mapping Dashboard</h1>
+      <p>This is a proof of concept dashboard to show how a mapping dashboard can be built using AWS Amplify, and NextJS.</p>
+      <h1>How to use this dashboard</h1>
+      <p>There are two key pages in the sidebar: Current Data, and Dashboard</p>
+      <h3>Current Data</h3>
+      <p>This page displays all the different types of data we have available to us, including any user defined data points (i.e. any markers added by the end users).</p>
+      <h3>Dashboard</h3>
+      <p>This page displays an interactive map to display any/all the data that is available, as well as add/amend/remove any user specified points.</p>
     </main>
   );
 }
